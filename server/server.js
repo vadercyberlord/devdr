@@ -3,9 +3,14 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+import connectToDB from "./database/db.js";
+
 // creating the server
 const app = express();
 const PORT = process.env.PORT || 4500;
+
+// connect to Database
+connectToDB();
 
 // allowed origins
 const allowedOrigins = ["http://localhost:5173"];
