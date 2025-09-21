@@ -13,5 +13,7 @@
 
 # Errors directory
    Global custome API error via Errors
+   
    Will make readeable error response later on
+
 
