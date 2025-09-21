@@ -1,17 +1,25 @@
+import dotenv from "dotenv"
 import express from "express";
-import "dotenv/config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
-import connectToDB from "./database/db.js";
+import connectToDB from "./database/dbConnect.js";
 import authRouters from "./routes/authRoutes.js";
-
+import errorHandler from "./middleware/errorHandler.js";
+dotenv.config({
+    path:'./.env'
+})
 // creating the server
 const app = express();
-const PORT = process.env.PORT || 4500;
+const port = process.env.PORT || 4500;
 
 // connect to Database
-connectToDB();
+const start = async () => {
+  await connectToDB();
+  app.listen(port, () => console.log(`Running on server ${port}`));
+};
+
+start();
+
 
 // allowed origins
 const allowedOrigins = ["http://localhost:5173"];
@@ -28,7 +36,7 @@ app.use(
         },
     })
 );
-
+app.use(express.urlencoded());
 app.use(cookieParser());
 app.use(cors({
     origin: allowedOrigins,
@@ -38,31 +46,14 @@ app.use(cors({
     exposedHeaders: ['Set-Cookie'],
     maxAge: 86400 // 24 hours
 }));
+app.use(errorHandler)
 
 // routes
 app.get("/", (req, res) => {
     res.send("Hello World, server is live");
 });
 
-app.use("/api/auth", authRouters);
+app.use("/api/v1/auth", authRouters);
 
-// Error-handling middleware
-app.use((err, req, res, next) => {
-    if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
-        return res
-            .status(400)
-            .json({ success: false, message: "Invalid or empty JSON payload" });
-    }
-    return res.status(500).json({
-        success: false,
-        message: "Something went wrong",
-        error: err.message,
-    });
-});
 
-//listening to the server
-app.listen(PORT, () => {
-    if (process.env.NODE_ENV !== "production") {
-        console.log("Server is running on port:", PORT);
-    }
-});
+
