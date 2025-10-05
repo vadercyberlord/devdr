@@ -29,9 +29,9 @@
    
    The issued picture is sent to the authority for verification and marked it via pin in following way:
      
-   Red pin -- Indicates the issue is verified
+   🔴 Red pin -- Indicates the issue is verified
      
-   Green pin -- Indicates the issue is resolved
+   🟢 Green pin -- Indicates the issue is resolved
      
    The user can also comment under the threads of the civic issues
 
