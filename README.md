@@ -5,15 +5,15 @@
 # Tech stack
    FRONTEND
    
-    * Javascript
-    * React
-    * Tailwind CSS
-    * HTML
+    Javascript
+    React
+    Tailwind CSS
+    HTML
     
    BACKEND
    
-    * Nodejs
-    * Expressjs
-    * Mongodb
+    Nodejs
+    Expressjs
+    Mongodb
 
     
