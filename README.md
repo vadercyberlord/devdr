@@ -37,7 +37,7 @@
 
 # ENVs
 
-      PORT=
+      PORT=4500
       MONGO_URI=mongodb+srv://
       ACCESS_TOKEN_SECRET=
       REFRESH_TOKEN_SECRET=
