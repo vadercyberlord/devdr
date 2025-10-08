@@ -1,9 +1,11 @@
 # Controllers
   Authorization and user controller
+  
   Image controller
   
 # Middlewares
   Authorization middleware
+  
   Multer middleware
 
 # Error handlers
@@ -11,6 +13,7 @@
 
 # Routes
   Authorization routes
+  
   Image routes
 
 # Dependencies
@@ -38,5 +41,6 @@
   ```nodemailer```
   
   ```uuid```
+
 
 
