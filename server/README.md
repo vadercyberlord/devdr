@@ -16,14 +16,25 @@
 # Dependencies
 
   ```bcryptjs```
+  
   ```cloudinary```
+  
   ```cookie-parser```
+  
   ```cors```
+  
   ```dotenv```
+  
   ```express```
+  
   ```jsonwebtoken```
+  
   ```mongodb```
+  
   ```mongoose```
+  
   ```multer```
+  
   ```nodemailer```
   ```uuid```
+
