@@ -1,7 +1,7 @@
 import Image from "../models/imageModel.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiError } from "../errors/customApiError.js";
-import cloudinary from "cloudinary"
+import cloudinary from "cloudinary";
 export const uploadImage = async (req, res) => {
   try {
     const image = req.file;
@@ -17,10 +17,11 @@ export const uploadImage = async (req, res) => {
       throw new ApiError(500, "Failed to upload image to Cloudinary");
     }
 
+    // updation imageUser
     const uploadedImage = await Image.create({
       imageUrl: avatar.secure_url,
       publicId: avatar.public_id,
-      user: req.user._id 
+      imageUser: req.user._id,
     });
 
     res.status(201).json({
@@ -59,20 +60,22 @@ export const updateImage = async (req, res) => {
     }
 
     const avatar = await uploadOnCloudinary(newImage.path);
-    
+
     if (!avatar || !avatar.secure_url) {
       throw new ApiError(500, "Failed to upload image to Cloudinary");
     }
 
     if (oldImage.publicId) {
-      await cloudinary.uploader.destroy(oldImage.publicId).catch((err) =>
-        console.error("Failed to delete old image from Cloudinary:", err)
-      );
+      await cloudinary.uploader
+        .destroy(oldImage.publicId)
+        .catch((err) =>
+          console.error("Failed to delete old image from Cloudinary:", err)
+        );
     }
 
     const uploadedImage = await Image.findByIdAndUpdate(
       imageId,
-     {
+      {
         imageUrl: avatar.secure_url,
         publicId: avatar.public_id,
       },
@@ -82,9 +85,8 @@ export const updateImage = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Image updated successfully",
-      data: uploadedImage
+      data: uploadedImage,
     });
-
   } catch (error) {
     if (error instanceof ApiError) {
       return res.status(error.statusCode).json({
@@ -92,7 +94,7 @@ export const updateImage = async (req, res) => {
         message: error.message,
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: error.message || "Internal server error",
@@ -100,20 +102,20 @@ export const updateImage = async (req, res) => {
   }
 };
 
-export const getSingleImage = async (req ,res) => {
+export const getSingleImage = async (req, res) => {
   try {
-    const {id} = req.params
+    const { id } = req.params;
 
     const image = await Image.findById(id).populate(
       "imageUser",
       "username email"
-    )
-      res.status(200).json({
+    );
+    res.status(200).json({
       success: true,
       data: image,
     });
   } catch (error) {
-        if (error instanceof ApiError) {
+    if (error instanceof ApiError) {
       return res.status(error.statusCode).json({
         success: false,
         message: error.message,
@@ -125,4 +127,49 @@ export const getSingleImage = async (req ,res) => {
       message: error.message || "Internal server error",
     });
   }
-}
+};
+
+export const totalImages = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const count = await Image.aggregate([
+      {
+        $match: {
+          imageUser: userId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalImages: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalImages: 1,
+        },
+      },
+    ]);
+
+    res.json({
+      success: true,
+      data: count[0] || {
+        totalImages: 0,
+      },
+    });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
+  }
+};
