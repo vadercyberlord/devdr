@@ -1,4 +1,4 @@
-import  ApiError  from "../errors/customApiError.js";
+import  ApiError from "../errors/customApiError.js";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
