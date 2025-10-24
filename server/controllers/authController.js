@@ -1,5 +1,5 @@
 import User from "../models/userModel.js";
-import { ApiError } from "../errors/customApiError.js";
+import ApiError from "../errors/customApiError.js";
 
 const generateAccessandRefreshToken = async (userId) => {
   try {
@@ -35,7 +35,7 @@ export const registerUser = async (req, res) => {
     });
 
     if (existingUser) {
-      throw new ApiError(409, "User already exists");
+      throw new ApiError(409, `User with the email ${req.body.email} already exists`);
     }
 
     const user = await User.create({
@@ -63,9 +63,19 @@ export const registerUser = async (req, res) => {
   } catch (error) {
     console.error("Registration error:", error);
 
+    // Handle custom errors
+    if (error instanceof ApiError) {
+      return res.status(error.statusCode || 400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    // Handle other errors
+    console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: "Internal server error",
     });
   }
 };
