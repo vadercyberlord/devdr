@@ -5,6 +5,7 @@ import cors from "cors";
 import connectToDB from "./database/dbConnect.js";
 import authRouters from "./routes/authRoutes.js";
 import imageRouters from "./routes/imageRoutes.js"
+import commentRouters from "./routes/commentRoute.js"
 import errorHandler from "./middleware/errorHandler.js";
 dotenv.config()
 // creating the server
@@ -54,6 +55,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRouters);
 app.use("/api/v1/image", imageRouters);
-
+app.use('/api/v1/comment',commentRouters)
 
 
