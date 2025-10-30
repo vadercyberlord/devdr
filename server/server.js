@@ -46,7 +46,7 @@ app.use(cors({
     exposedHeaders: ['Set-Cookie'],
     maxAge: 86400 // 24 hours
 }));
-app.use(errorHandler)
+
 
 // routes
 app.get("/", (req, res) => {
@@ -57,4 +57,4 @@ app.use("/api/v1/auth", authRouters);
 app.use("/api/v1/image", imageRouters);
 app.use('/api/v1/comment',commentRouters)
 
-
+app.use(errorHandler)
